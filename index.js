@@ -40,7 +40,7 @@ router.use(function(req, res, next) {
   if (db) {
         db.collection('logs', function (err, collection) {
             collection.update({nome : "logs"},
-			{$push : {logs : 'Middleware Trigger for IP : '+ip+ " at " + moment().format('MMMM Do YYYY, h:mm:ss a')}});
+			{$push : {logs : {ip : ip,horario: moment().format('MMMM Do YYYY, h:mm:ss a')}}});
 	
 		if (err) console.log(err);
   })} else {
@@ -110,8 +110,8 @@ router.get('/logs', function (req, res) {
   }
   if (db) {
         db.collection('logs', function (err, collection) {
-            collection.find().toArray(function (err, items) {
-                res.jsonp(items);
+            collection.find().toArray(function (err, logs) {
+                res.render('pages/logs', { logs : logs});
             });
         });
   } else {
