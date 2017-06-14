@@ -41,8 +41,8 @@ app.get('/teste', function(request, response) {
   if (db) {
         db.collection('banco', function (err, collection) {
             collection.insert({nome : "Israel"},function (err) {
-				if (err) console.log(err);
-                console.log("win");
+		if (err) console.log(err);
+				 else res.send("Adicionado com sucesso");
             });
         });
   } else {
