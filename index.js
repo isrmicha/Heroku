@@ -104,6 +104,21 @@ router.get('/mostrar', function (req, res) {
   }
 });
 
+router.get('/logs', function (req, res) {
+  if (!db) {
+    initDb(function(err){});
+  }
+  if (db) {
+        db.collection('logs', function (err, collection) {
+            collection.find().toArray(function (err, items) {
+                res.jsonp(items);
+            });
+        });
+  } else {
+    res.send('Error DB');
+  }
+});
+
 router.get('/:nome', function(req, res) {
 	console.log("Renderizou :nome");
   res.render('pages/index', {nome:req.params.nome}); 
