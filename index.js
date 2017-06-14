@@ -1,5 +1,7 @@
 var express = require('express');
 var app = express();
+var moment = require('moment');
+moment.locale('pt-BR');
 //{Conexao MONGODB
 var db = null,
     dbDetails = new Object();
@@ -24,13 +26,38 @@ app.use(express.static(__dirname + '/public'));
 // views is directory for all template files
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
+var router = express.Router(); 
+router.use(function(req, res, next) {
+	var ip = req.headers['x-forwarded-for'] || 
+     req.connection.remoteAddress || 
+     req.socket.remoteAddress ||
+     req.connection.socket.remoteAddress;
+    // do logging
+    console.log('Middleware Trigger for IP : '+ip+ " at " + moment().format('MMMM Do YYYY, h:mm:ss a'));
+    next(); // make sure we go to the next routes and don't stop here
+});
 
-app.get('/', function(req, res) {
+router.get('/', function(req, res) {
 	console.log("Renderizou index");
   res.render('pages/index', {nome:"Vazio"}); 
 });
 
-app.get('/teste', function(req, res) {
+router.post('/', function(req, res) {
+	console.log("Renderizou post");
+  res.send('POST'); 
+});
+
+router.put('/', function(req, res) {
+	console.log("Renderizou put");
+  res.send('PUT'); 
+});
+
+router.delete('/', function(req, res) {
+	console.log("Renderizou delete");
+  res.send('DELETE'); 
+});
+
+router.get('/inserir', function(req, res) {
   if (!db) {
     initDb(function(err){});
   }
@@ -49,7 +76,7 @@ app.get('/teste', function(req, res) {
   }
 });
 
-app.get('/teste2', function (req, res) {
+router.get('/mostrar', function (req, res) {
   if (!db) {
     initDb(function(err){});
   }
@@ -64,13 +91,13 @@ app.get('/teste2', function (req, res) {
   }
 });
 
-app.get('/:nome', function(req, res) {
-	console.log("Renderizou index");
+router.get('/:nome', function(req, res) {
+	console.log("Renderizou :nome");
   res.render('pages/index', {nome:req.params.nome}); 
 });
 
-app.get('/:nome/:idade', function(req, res) {
-	console.log("Renderizou index");
+router.get('/:nome/:idade', function(req, res) {
+	console.log("Renderizou :nome :idade");
   res.render('pages/index', {nome:req.params.nome + " " +req.params.idade}); 
 });
 
@@ -80,7 +107,7 @@ app.get('/:nome/:idade', function(req, res) {
 initDb(function(err){
   console.log('Error connecting to Mongo. Message:\n'+err);
 });
-
+app.use('/', router);
 app.listen(app.get('port'));
 console.log('Server running on '+ app.get('port'));
 
