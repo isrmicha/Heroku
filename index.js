@@ -28,31 +28,27 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 var router = express.Router(); 
 router.use(function(req, res, next) {
-	var ip = req.headers['x-forwarded-for'] || 
-     req.connection.remoteAddress || 
-     req.socket.remoteAddress ||
-     req.connection.socket.remoteAddress;
-    // do logging
-    console.log('Middleware Trigger for IP : '+ip+ " at " + moment().format('MMMM Do YYYY, h:mm:ss a'));
-	  if (!db) {
-    initDb(function(err){});
-  }
-  if (db) {
-        db.collection('logs', function (err, collection) {
-            collection.update({nome : "logs"},
-			{$push : {logs : {ip : ip,horario: moment().format('MMMM Do YYYY, h:mm:ss a')}}});
-	
-		if (err) console.log(err);
-  })} else {
-    res.send('Error DB');
-  }
+	logInsert(req,res,'Visitou');
 	
     next(); // make sure we go to the next routes and don't stop here
 });
 
 router.get('/', function(req, res) {
-	console.log("Renderizou index");
-  res.render('pages/index', {nome:"Vazio"}); 
+	  if (!db) {
+    initDb(function(err){});
+  }
+  if (db) {
+        db.collection('logs', function (err, collection) {
+            collection.find().toArray(function (err, logs) {
+					console.log("Renderizou index");
+                res.render('pages/index', { logs : logs});
+            });
+        });
+  } else {
+    res.send('Error DB');
+  }
+
+
 });
 
 router.post('/', function(req, res) {
@@ -81,9 +77,7 @@ router.get('/inserir', function(req, res) {
 	
 		if (err) console.log(err);
            else 	  res.send("Adicionado com sucesso");
-		
-			
-        
+			logInsert(req,res,'Adicionou');
   })} else {
     res.send('Error DB');
   }
@@ -97,6 +91,7 @@ router.get('/mostrar', function (req, res) {
         db.collection('banco', function (err, collection) {
             collection.find().toArray(function (err, items) {
                 res.jsonp(items);
+					logInsert(req,res,'Mostrou');
             });
         });
   } else {
@@ -130,7 +125,26 @@ router.get('/:nome/:idade', function(req, res) {
 });
 
 
-
+function logInsert(req, res, acao){
+	var ip = req.headers['x-forwarded-for'] || 
+     req.connection.remoteAddress || 
+     req.socket.remoteAddress ||
+     req.connection.socket.remoteAddress;
+    // do logging
+    console.log('Middleware Trigger for IP : '+ip+ " at " + moment().format('MMMM Do YYYY, h:mm:ss a'));
+	  if (!db) {
+    initDb(function(err){});
+  }
+  if (db) {
+        db.collection('logs', function (err, collection) {
+            collection.update({nome : "logs"},
+			{$push : {logs : {ip : ip,horario: moment().format('MMMM Do YYYY, h:mm:ss a'), acao :acao}}});
+	
+		if (err) console.log(err);
+  })} else {
+    res.send('Error DB');
+  }
+}
 // error handling
 initDb(function(err){
   console.log('Error connecting to Mongo. Message:\n'+err);
