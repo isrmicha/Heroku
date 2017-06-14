@@ -30,16 +30,6 @@ app.get('/', function(req, res) {
   res.render('pages/index', {nome:"Vazio"}); 
 });
 
-app.get('/:nome', function(req, res) {
-	console.log("Renderizou index");
-  res.render('pages/index', {nome:req.params.nome}); 
-});
-
-app.get('/:nome/:idade', function(req, res) {
-	console.log("Renderizou index");
-  res.render('pages/index', {nome:req.params.nome + " " +req.params.idade}); 
-});
-
 app.get('/teste', function(req, res) {
   if (!db) {
     initDb(function(err){});
@@ -70,6 +60,18 @@ app.get('/teste2', function (req, res) {
     res.send('Error DB');
   }
 });
+
+app.get('/:nome', function(req, res) {
+	console.log("Renderizou index");
+  res.render('pages/index', {nome:req.params.nome}); 
+});
+
+app.get('/:nome/:idade', function(req, res) {
+	console.log("Renderizou index");
+  res.render('pages/index', {nome:req.params.nome + " " +req.params.idade}); 
+});
+
+
 
 // error handling
 initDb(function(err){
