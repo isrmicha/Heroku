@@ -34,6 +34,19 @@ router.use(function(req, res, next) {
      req.connection.socket.remoteAddress;
     // do logging
     console.log('Middleware Trigger for IP : '+ip+ " at " + moment().format('MMMM Do YYYY, h:mm:ss a'));
+	  if (!db) {
+    initDb(function(err){});
+  }
+  if (db) {
+        db.collection('logs', function (err, collection) {
+            collection.update({nome : "logs"},
+			{$push : {logs : 'Middleware Trigger for IP : '+ip+ " at " + moment().format('MMMM Do YYYY, h:mm:ss a')}});
+	
+		if (err) console.log(err);
+  })} else {
+    res.send('Error DB');
+  }
+	
     next(); // make sure we go to the next routes and don't stop here
 });
 
