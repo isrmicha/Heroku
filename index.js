@@ -1,6 +1,5 @@
 var express = require('express');
 var app = express();
-
 //{Conexao MONGODB
 var db = null,
     dbDetails = new Object();
@@ -20,21 +19,18 @@ var initDb = function(callback) {
 };
 //}
 app.set('port', (process.env.PORT || 5000));
-
 app.use(express.static(__dirname + '/public'));
 
 // views is directory for all template files
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
-app.get('/', function(request, response) {
+app.get('/', function(req, res) {
 	console.log("Renderizou index");
-  response.render('pages/index');
-  
+  res.render('pages/index', {nome:"Israel"}); 
 });
 
 app.get('/teste', function(req, res) {
-	
   if (!db) {
     initDb(function(err){});
   }
@@ -51,9 +47,6 @@ app.get('/teste', function(req, res) {
 });
 
 app.get('/teste2', function (req, res) {
-  // try to initialize the db on every request if it's not already
-  // initialized.
-
   if (!db) {
     initDb(function(err){});
   }
@@ -67,9 +60,6 @@ app.get('/teste2', function (req, res) {
     res.send('Error DB');
   }
 });
-
-
-
 
 // error handling
 initDb(function(err){
