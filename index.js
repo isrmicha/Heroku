@@ -27,7 +27,17 @@ app.set('view engine', 'ejs');
 
 app.get('/', function(req, res) {
 	console.log("Renderizou index");
-  res.render('pages/index', {nome:"Israel"}); 
+  res.render('pages/index', {nome:"Vazio"}); 
+});
+
+app.get('/:nome', function(req, res) {
+	console.log("Renderizou index");
+  res.render('pages/index', {nome:req.params.nome}); 
+});
+
+app.get('/:nome/:idade', function(req, res) {
+	console.log("Renderizou index");
+  res.render('pages/index', {nome:req.params.nome + " " +req.params.idade}); 
 });
 
 app.get('/teste', function(req, res) {
