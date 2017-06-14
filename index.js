@@ -36,12 +36,15 @@ app.get('/teste', function(req, res) {
   }
   if (db) {
         db.collection('banco', function (err, collection) {
-            collection.insert({nome : "Israel"},function (err) {
+            collection.update({nome : "lista1"},
+			{$push : {lista : req.ip}});
+	
 		if (err) console.log(err);
-				 else res.send("Adicionado com sucesso");
-            });
-        });
-  } else {
+           else 	  res.send("Adicionado com sucesso");
+		
+			
+        
+  })} else {
     res.send('Error DB');
   }
 });
