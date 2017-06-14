@@ -33,7 +33,7 @@ app.get('/', function(request, response) {
   
 });
 
-app.get('/teste', function(request, response) {
+app.get('/teste', function(req, res) {
 	
   if (!db) {
     initDb(function(err){});
