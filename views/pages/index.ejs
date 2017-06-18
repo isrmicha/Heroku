@@ -9,7 +9,15 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
+    <script src="scripts/ui-grid.min.js"></script>
+   <link rel="stylesheet" href="/stylesheets/ui-grid.min.css">
+ 
+<style>
+.myGrid {
+    width: 500px;
+    height: 250px;
+  }
+  </style>
   </head>
 
 <body ng-app="myApp" ng-controller="myCtrl">
@@ -22,39 +30,27 @@
   </div>
 
 <div ng-view></div>
-  <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#logs">Mostrar Logs</button>
-  <div id="logs" class="collapse">
-<table class="table table-striped">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>IP</th>
-		       <th>Horário</th>
-			        <th>Ação</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr ng-repeat="x in logs| orderBy : '-horario'">
-        <td>{{$index}}</td>
-        <td>{{x.ip}}</td>
-		       <td>{{x.horario}}</td>
-			   		       <td>{{x.acao}}</td>
-      </tr>
-    </tbody>
-  </table>
 
+
+  <div class="panel panel-default">
+  <div class="panel-body">
+  <div id="grid1" ui-grid="{ data: data }" class="grid"></div>
+  </div>
 </div>
 
+
+
+
 <script>
-var app = angular.module("myApp", ["ngRoute"]);
+var app = angular.module("myApp", ['ngRoute','ui.grid']);
 
 app.controller("myCtrl", function($scope) {
   var myVar = JSON.parse('<%- JSON.stringify(logs) %>');
   myVar =myVar[0].logs;
-  $scope.logs =[];
+  $scope.data =[];
    
   Object.keys(myVar).map(function (key) {
-  $scope.logs.push(myVar[key]); 
+  $scope.data.push(myVar[key]); 
   });
 
 
