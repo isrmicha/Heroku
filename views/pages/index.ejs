@@ -34,7 +34,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="x in logs track by $index">
+      <tr ng-repeat="x in logs| orderBy : '-horario'">
         <td>{{$index}}</td>
         <td>{{x.ip}}</td>
 		       <td>{{x.horario}}</td>
@@ -50,8 +50,14 @@ var app = angular.module("myApp", ["ngRoute"]);
 
 app.controller("myCtrl", function($scope) {
   var myVar = JSON.parse('<%- JSON.stringify(logs) %>');
-  $scope.logs =myVar[0].logs;
-    console.log($scope.logs);
+  myVar =myVar[0].logs;
+  $scope.logs =[];
+   
+  Object.keys(myVar).map(function (key) {
+  $scope.logs.push(myVar[key]); 
+  });
+
+
 
 
 
