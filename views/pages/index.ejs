@@ -14,7 +14,7 @@
  
 <style>
 .myGrid {
-    width: 500px;
+
     height: 250px;
   }
   </style>
@@ -24,7 +24,7 @@
 <div class="container">
   <div class="alert alert-warning">
  <a class="btn btn-primary" href="#/!logs" role="button">Ver Logs</a>
- <a class="btn btn-info" href="#/!mostrar" role="button">Mostrar</a>
+ <a class="btn btn-info" href="#/!home" role="button">Mostrar</a>
  <a class="btn btn-warning" href="#/!inserir" role="button">Inserir</a>
  <a class="btn btn-danger" href="#/!put" role="button">Put</a>
   </div>
@@ -38,25 +38,24 @@
   </div>
 </div>
 
-
-
-
 <script>
 var app = angular.module("myApp", ['ngRoute','ui.grid']);
-
+app.config(function($routeProvider) {
+    $routeProvider
+    .when("/home", {
+        templateUrl : "<h1>Banana</h1><p>Bananas contain around 75% water.</p>"
+    })
+    .otherwise({
+        template : "<h1>Nothing</h1><p>Nothing has been selected</p>"
+    });
+	});
 app.controller("myCtrl", function($scope) {
   var myVar = JSON.parse('<%- JSON.stringify(logs) %>');
   myVar =myVar[0].logs;
   $scope.data =[];
-   
   Object.keys(myVar).map(function (key) {
   $scope.data.push(myVar[key]); 
   });
-
-
-
-
-
 });
 </script>
 </body>

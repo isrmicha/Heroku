@@ -1,5 +1,9 @@
 var express = require('express');
 var app = express();
+var http = require("http");
+setInterval(function() {
+    http.get("https://isrmicha.herokuapp.com/");
+}, 60000*25); // every 5 minutes (300000)
 var moment = require('moment-timezone');
 moment.locale('pt-BR');
 //{Conexao MONGODB
